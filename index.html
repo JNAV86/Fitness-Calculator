@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        
+        <!--CSS-->
+        <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+        <!--
+        <link href="css/calc-styles.css" rel="stylesheet" type="text/css"/>
+        -->
+        
+        <!--
+        <link href="css/calculator.css" rel="stylesheet" type="text/css"/>
+        -->
+        <script>
+            function calculate_bmr(formname) {
+
+                var activityLevel='';
+
+                if (formname == 'form1') {
+
+                        // Get the value selected for activityLevel
+                        for (var i=0; i < document.bmr_calc1.activityLevel.length; i++)
+                        {
+                                if (document.bmr_calc1.activityLevel[i].selected)
+                                {
+                                        var activityLevel = document.bmr_calc1.activityLevel[i].value;
+                                }
+                        }
+
+                        var feet = parseFloat(document.bmr_calc1.feet.value); 
+                        var inches = parseFloat(document.bmr_calc1.inches.value); 
+                        height = ((feet*12)+inches);
+
+                        if (height == 0) {
+                          alert("Please enter figures into the height fields (feet and inches)"); return false; 
+                        }
+
+
+                        var pounds = parseFloat(document.bmr_calc1.pounds.value); 
+                        var weight = pounds;
+
+                        if (weight == 0) {
+                          alert("Please enter figures into the weight fields (pounds)"); return false; 
+                        }
+
+                        if ((document.bmr_calc1.age.value == 0) || (document.bmr_calc1.age.value == '')) {
+                          alert("Please enter a figure in the 'age' field"); return false; 
+                        } else {
+                          var age=document.bmr_calc1.age.value;
+                        }
+
+                        if (activityLevel == '') {
+                          alert("Please select an option for 'activity level'"); return false; 
+                        }
+
+                        var gender = document.bmr_calc1.gender.value;
+
+                        var unittype='imperial';
+
+                        // alert(pounds "+pounds+", weight: "+weight);
+                        // alert("feet: "+feet+", inches "+inches+", height: "+height);
+
+                }
+
+                 if (unittype == 'imperial') {
+                        // Imperial (UK and US)
+
+                         if (gender == 'female') {
+                                // Female
+                                bmr = 655.0955+(4.3379*(weight))+(4.6980*(height))-(4.6756*(age));
+                        } else {
+                                // Male
+                                bmr = 66.4730+(6.2377*(weight))+(12.7084*(height))-(6.7550*(age));
+                        }
+                 }
+
+                 var calorie_requirement = (bmr * activityLevel);
+
+                 num1 = Math.pow(10, 0);
+                 bmr = Math.round(bmr * num1) / num1;
+                 calorie_requirement = Math.round(calorie_requirement * num1) / num1; 
+
+                 bmr_kj = Math.round(bmr*4.1868);
+                 calorie_requirement_kj = Math.round(calorie_requirement*4.1868);
+
+                 v_summary = "Your BMR value is:<br><div style='text-align:center;font-size:45px; font-weight:bold; margin:10px 0px 15px 0px;'>"+bmr+"</div>This means that your body will burn <b>"+bmr+"</b> calories ("+bmr_kj+" kilojoules) each day if you engage in no activity for the entire day.";	
+                 v_summary += "<br><br><b>Your daily calorie requirement is "+calorie_requirement+" calories ("+ calorie_requirement_kj+" kilojoules)</b>.";
+                 v_summary += "<br><br>These calculations are for a "+gender+" of "+age+" years of age with the height, weight and lifestyle you have specified.";
+
+                 result_bmr.innerHTML="<span>" + v_summary + "</span>";
+
+                 var activeResults = document.getElementById("calcresults");
+                 activeResults.style.display = "block";
+
+                
+                // This function is located in the /scripts/jquery.scrollTo-min.js file - (script needs to be in the top of the calculator page)
+                //  $.scrollTo("#calcresults",800);
+
+                // Changes the submit button once clicked (to display 'processing' message)
+                $("#leftColCalc form").submit(function()
+                {
+                    var $form = $(this);   
+                    var submitValue = $form.find(":submit").val(); //Find the current value of the submit button
+
+                var $submit = $form.find(":submit").attr('value','Processing...');
+
+                    window.setTimeout(function()
+                {
+                        $submit.attr('value',submitValue)}, 2000);
+                });
+
+
+            }
+            
+        </script>
+        
+        
+    </head>
+    <body>
+        <!--Dashboard-->
+        <div data-role="page" id="home" data-theme="b" data-url="home" tabindex="0" class="ui-page ui-page-theme-b" style="min-height: 310px;">
+            
+            <div data-role="header" data-theme="">
+                <h1>NeoFit</h1>
+            </div><!-- /header -->
+
+            <div data-role="content">
+                <ul data-role="listview" data-inset="true">
+                    <li><a href="#bmr">BMR (Base Metabolic Rate)</a></li>
+                </ul>
+            </div><!-- /content -->
+
+            <div data-role="footer" data-id="myfooter" data-position="fixed">
+                <div class="controls" data-role="controlgroup" data-type="horizontal">
+                    <a href="#home" data-role="button" data-icon="home">Home</a>
+                </div>
+            </div><!-- /footer -->
+
+        </div>
+        <!-- /Dashboard page --> 
+        
+        <!--Dashboard-->
+        <div data-role="page" id="bmr" data-theme="b" data-url="bmr" tabindex="0" class="ui-page ui-page-theme-b" style="min-height: 310px;">
+            
+            <div data-role="header" data-theme="b">
+                <h1>BMR Calculator</h1>
+            </div><!-- /header -->
+
+            <div data-role="content">
+                
+                <div data-theme="a" data-form="ui-body-a" class="ui-body ui-body-a ui-corner-all">
+                        <form name="bmr_calc1" id="bmrForm1" onSubmit="calculate_bmr('form1');return false">                         
+                            <div id="form1" class="calculator_form bmr-calc">
+                            
+                                <!--Select Gender-->
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a add-margin-top">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <br style="clear:both;">
+                                            <label for="gender" class="heading"><b>Gender</b></label>
+                                            <br style="clear:both;">       
+                                        </div>
+                                    </div>
+
+                                    <div class="ui-block-b fix-margin-top">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <select name="gender" id="gender">
+                                                <option value="female">Female</option>
+                                                <option value="male">Male</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div><!-- /grid-a -->
+                                <!--/Select Gender-->
+                            
+                                <!--Input Age-->
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a add-margin-top">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">                                            
+                                            <br style="clear:both;">
+                                            <label for="age" class="heading"><b>Age</b></label>
+                                            <br style="clear:both;">                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="ui-block-b fix-margin-top">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <input type="number" step="any" min="0" name="age" id="age" class="calculatorMedInput" required>
+                                        </div>
+                                    </div>
+                                </div><!-- /grid-a -->
+                                <!--/Input Age-->                                
+                                
+                                
+                                <!--Input Height-->
+                                <div class="ui-grid-b">
+                                    <div class="ui-block-a add-margin-top">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <br style="clear:both;">
+                                            <label for="height" class="heading"><b>Height</b></label>
+                                            <br style="clear:both;">
+                                        </div>                                                      
+                                    </div>
+
+                                    <div class="ui-block-b add-margin-top">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <div class="single-field multi-tile">
+                                                <label for="feet">Feet:</label>
+                                                <input type="number" step="any" min="0" name="feet" id="feet" class="calculatorShortInput" value="0" required>
+                                            </div>
+                                        </div>                                            
+                                    </div>
+
+                                    <div class="ui-block-c">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <div class="single-field multi-tile">
+                                                <label for="inches" class="tile">Inches:</label>
+                                                <input type="number" step="any" min="0" name="inches" id="inches" class="calculatorShortInput" value="0" required>
+                                            </div>
+                                        </div>                                            
+                                    </div>
+                                </div><!-- /grid-b -->
+                                <!--/Input Height--> 
+
+                                <!--Input Weight-->
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a add-margin-top">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <br style="clear:both;">
+                                            <label for="weight" class="heading"><b>Weight</b></label>
+                                            <br style="clear:both;">
+                                        </div>
+                                    </div>
+
+                                    <div class="ui-block-b">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <div class="single-field multi-tile">
+                                                <label for="pounds" class="tile">Pounds:</label>
+                                                <input type="number" step="any" min="0" name="pounds" id="pounds" class="calculatorShortInput" value="0" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /grid-a -->
+                                <!--/Input Weight--> 
+
+                                <br>
+
+                                <!--Input Activity Level-->
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <br style="clear:both;">
+                                            <label for="weight" class="heading"><b>Activity Level</b></label>
+                                            <br style="clear:both;">
+                                        </div>
+                                    </div>
+
+                                    <div class="ui-block-b">
+                                        <div class="ui-bar ui-bar-a" style="height:60px">
+                                            <div class="single-field multi-tile">
+                                                <select name="activityLevel" id="activityLevel">
+                                                <option value="1.2" name="activityLevel">Sedentary</option>
+                                                <option value="1.375" name="activityLevel">Lightly active</option>
+                                                <option value="1.55" name="activityLevel">Moderately active</option>
+                                                <option value="1.725" name="activityLevel">Very active</option>
+                                                <option value="1.9" name="activityLevel">Super active</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /grid-a -->
+                                <!--/Input Activity Level-->
+
+                                <!--Submit Form--> 
+                                <div class="ui-grid-a">
+                                    <input onClick="window.location.href='#results'" type="submit" name="formsubmit1" value="Calculate BMR" >
+                                </div><!-- /grid-a -->
+                                <!--/Submit Form--> 
+                            </div>
+                        </form>
+
+                        <br style="clear:both;"><br>
+                </div>
+                
+            </div><!-- /content -->
+
+            <div data-role="footer" data-id="myfooter" data-position="fixed">
+                <div class="controls" data-role="controlgroup" data-type="horizontal">
+                    <a href="#home" data-role="button" data-icon="home">Home</a>
+                </div>
+            </div><!-- /footer -->
+
+        </div>
+        <!-- /Dashboard page --> 
+        
+        <!--Results Page-->
+        <div data-role="page" id="results" data-theme="b" data-url="home" tabindex="0" class="ui-page ui-page-theme-b" style="min-height: 310px;">
+
+                <div data-role="header" data-theme="b">
+                        <h1>BMR Results</h1>
+                </div><!-- /header -->
+
+                <div data-role="content">
+                    <div id='calcresults' class='calculator_results'>
+
+                        <h2 style="margin-top:0px;">Your BMR Results...</h2>
+
+                        <div id="result_bmr"></div>
+
+                        <hr>
+
+                        <br style="clear:both;">
+
+                    </div>
+                </div><!-- /content -->
+
+                <div data-role="footer" data-id="myfooter" data-position="fixed">
+                        <div class="controls" data-role="controlgroup" data-type="horizontal">
+                    <a href="#home" data-role="button" data-icon="home">Home</a>
+                        </div>
+                </div><!-- /footer -->
+
+        </div>
+        <!-- /Results Page-->         
+        
+        
+    </body>
+</html>
+
