@@ -12,11 +12,12 @@
         NeoFit is an application that calculates BMR (Basal Metabolic Rate).
     </description>
 
-    <author href="" email="">
+    <author href="joshua.cogburn.com" email="joshua.dfw86@gmail.com">
         NeoFit Team
     </author>
     
     <content src="index.html" />
+ 
     <!--
         If you do not want any permissions to be added to your app, add the
         following tag to your config.xml; you will still have the INTERNET
